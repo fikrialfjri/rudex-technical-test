@@ -11,14 +11,19 @@ import SearchBar from "./components/SearchBar";
 
 const App = () => {
   const [data, setData] = useState(null);
+  const [searchProduct, setSearchProduct] = useState("");
 
   useEffect(() => {
+    if (searchProduct) {
+      _fetchData({ product: searchProduct });
+      return;
+    }
     _fetchData();
-  }, []);
+  }, [searchProduct]);
 
-  const _fetchData = () => {
+  const _fetchData = (params) => {
     axios
-      .get("http://localhost:8000/sales")
+      .get("http://localhost:8000/sales", { params })
       .then((res) => setData(res.data))
       .catch((err) => console.error(err));
   };
@@ -29,7 +34,7 @@ const App = () => {
         <header className="flex items-center justify-between h-10 gap-4">
           <h1 className="text-3xl font-bold text-neutral-800 whitespace-nowrap">Analitik Penjualan</h1>
           <div className="w-96">
-            <SearchBar />
+            <SearchBar onChange={(v) => setSearchProduct(v)} value={searchProduct} withButton />
           </div>
         </header>
 
@@ -44,7 +49,7 @@ const App = () => {
               return contentHeight > 0 && containerWidth > 0 && <Statistics height={contentHeight} />;
             }}
           </SectionCard>
-          <SectionCard classes="col-span-4">
+          <SectionCard classes="col-span-4" noOverflow>
             {(contentHeight, containerWidth) => {
               return contentHeight > 0 && containerWidth > 0 && <SalesTable height={contentHeight} />;
             }}
