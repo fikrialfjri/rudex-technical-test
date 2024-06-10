@@ -84,3 +84,7 @@ export const transformStatisticData = (data) => {
     most_sold_product,
   };
 };
+
+export const removeEmptyObjectValue = (obj) => {
+  return Object.fromEntries(Object.entries(obj).filter(([key, value]) => value !== null && value !== undefined && value !== ""));
+};
